@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { computeFarmHealthScore } from "@/lib/disease-engine";
 import { Activity, AlertTriangle, Leaf, ScanLine, Stethoscope, Upload } from "lucide-react";
