@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Leaf, Stethoscope, Upload, Radio, LogOut, Menu, X, Sparkles, BookOpen, Bell, Shield, FileText, Database, FlaskConical, ClipboardCheck } from "lucide-react";
+import { LayoutDashboard, Leaf, Stethoscope, Upload, Radio, LogOut, Menu, X, Sparkles, BookOpen, Bell, Shield, FileText, Database, FlaskConical, ClipboardCheck, Settings as SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_app")({
@@ -22,6 +22,7 @@ const NAV = [
   { to: "/iot", label: "IoT Sensors", icon: Radio },
   { to: "/admin", label: "Admin", icon: Shield },
   { to: "/demo", label: "Demo Data", icon: FlaskConical },
+  { to: "/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
 
 function AppLayout() {
