@@ -12,10 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppLearnRouteImport } from './routes/_app.learn'
 import { Route as AppIotRouteImport } from './routes/_app.iot'
 import { Route as AppImageAnalysisRouteImport } from './routes/_app.image-analysis'
 import { Route as AppFarmsRouteImport } from './routes/_app.farms'
+import { Route as AppDemoRouteImport } from './routes/_app.demo'
+import { Route as AppDatasetRouteImport } from './routes/_app.dataset'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
@@ -38,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLearnRoute = AppLearnRouteImport.update({
   id: '/learn',
   path: '/learn',
@@ -56,6 +64,16 @@ const AppImageAnalysisRoute = AppImageAnalysisRouteImport.update({
 const AppFarmsRoute = AppFarmsRouteImport.update({
   id: '/farms',
   path: '/farms',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDemoRoute = AppDemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDatasetRoute = AppDatasetRouteImport.update({
+  id: '/dataset',
+  path: '/dataset',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -101,10 +119,13 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AppAlertsRoute
   '/assistant': typeof AppAssistantRoute
   '/dashboard': typeof AppDashboardRoute
+  '/dataset': typeof AppDatasetRoute
+  '/demo': typeof AppDemoRoute
   '/farms': typeof AppFarmsRouteWithChildren
   '/image-analysis': typeof AppImageAnalysisRoute
   '/iot': typeof AppIotRoute
   '/learn': typeof AppLearnRoute
+  '/reports': typeof AppReportsRoute
   '/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/health-record/new': typeof AppHealthRecordNewRoute
   '/predictions/$id': typeof AppPredictionsIdRoute
@@ -116,10 +137,13 @@ export interface FileRoutesByTo {
   '/alerts': typeof AppAlertsRoute
   '/assistant': typeof AppAssistantRoute
   '/dashboard': typeof AppDashboardRoute
+  '/dataset': typeof AppDatasetRoute
+  '/demo': typeof AppDemoRoute
   '/farms': typeof AppFarmsRouteWithChildren
   '/image-analysis': typeof AppImageAnalysisRoute
   '/iot': typeof AppIotRoute
   '/learn': typeof AppLearnRoute
+  '/reports': typeof AppReportsRoute
   '/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/health-record/new': typeof AppHealthRecordNewRoute
   '/predictions/$id': typeof AppPredictionsIdRoute
@@ -133,10 +157,13 @@ export interface FileRoutesById {
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/assistant': typeof AppAssistantRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/dataset': typeof AppDatasetRoute
+  '/_app/demo': typeof AppDemoRoute
   '/_app/farms': typeof AppFarmsRouteWithChildren
   '/_app/image-analysis': typeof AppImageAnalysisRoute
   '/_app/iot': typeof AppIotRoute
   '/_app/learn': typeof AppLearnRoute
+  '/_app/reports': typeof AppReportsRoute
   '/_app/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/_app/health-record/new': typeof AppHealthRecordNewRoute
   '/_app/predictions/$id': typeof AppPredictionsIdRoute
@@ -150,10 +177,13 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/assistant'
     | '/dashboard'
+    | '/dataset'
+    | '/demo'
     | '/farms'
     | '/image-analysis'
     | '/iot'
     | '/learn'
+    | '/reports'
     | '/farms/$farmId'
     | '/health-record/new'
     | '/predictions/$id'
@@ -165,10 +195,13 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/assistant'
     | '/dashboard'
+    | '/dataset'
+    | '/demo'
     | '/farms'
     | '/image-analysis'
     | '/iot'
     | '/learn'
+    | '/reports'
     | '/farms/$farmId'
     | '/health-record/new'
     | '/predictions/$id'
@@ -181,10 +214,13 @@ export interface FileRouteTypes {
     | '/_app/alerts'
     | '/_app/assistant'
     | '/_app/dashboard'
+    | '/_app/dataset'
+    | '/_app/demo'
     | '/_app/farms'
     | '/_app/image-analysis'
     | '/_app/iot'
     | '/_app/learn'
+    | '/_app/reports'
     | '/_app/farms/$farmId'
     | '/_app/health-record/new'
     | '/_app/predictions/$id'
@@ -219,6 +255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/learn': {
       id: '/_app/learn'
       path: '/learn'
@@ -245,6 +288,20 @@ declare module '@tanstack/react-router' {
       path: '/farms'
       fullPath: '/farms'
       preLoaderRoute: typeof AppFarmsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/demo': {
+      id: '/_app/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof AppDemoRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dataset': {
+      id: '/_app/dataset'
+      path: '/dataset'
+      fullPath: '/dataset'
+      preLoaderRoute: typeof AppDatasetRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard': {
@@ -316,10 +373,13 @@ interface AppRouteChildren {
   AppAlertsRoute: typeof AppAlertsRoute
   AppAssistantRoute: typeof AppAssistantRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDatasetRoute: typeof AppDatasetRoute
+  AppDemoRoute: typeof AppDemoRoute
   AppFarmsRoute: typeof AppFarmsRouteWithChildren
   AppImageAnalysisRoute: typeof AppImageAnalysisRoute
   AppIotRoute: typeof AppIotRoute
   AppLearnRoute: typeof AppLearnRoute
+  AppReportsRoute: typeof AppReportsRoute
   AppHealthRecordNewRoute: typeof AppHealthRecordNewRoute
   AppPredictionsIdRoute: typeof AppPredictionsIdRoute
 }
@@ -329,10 +389,13 @@ const AppRouteChildren: AppRouteChildren = {
   AppAlertsRoute: AppAlertsRoute,
   AppAssistantRoute: AppAssistantRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppDatasetRoute: AppDatasetRoute,
+  AppDemoRoute: AppDemoRoute,
   AppFarmsRoute: AppFarmsRouteWithChildren,
   AppImageAnalysisRoute: AppImageAnalysisRoute,
   AppIotRoute: AppIotRoute,
   AppLearnRoute: AppLearnRoute,
+  AppReportsRoute: AppReportsRoute,
   AppHealthRecordNewRoute: AppHealthRecordNewRoute,
   AppPredictionsIdRoute: AppPredictionsIdRoute,
 }
