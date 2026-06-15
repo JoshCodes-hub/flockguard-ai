@@ -12,6 +12,7 @@ export const Route = createFileRoute("/_app/dashboard")({
 });
 
 function Dashboard() {
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ["dashboard"],
     queryFn: async () => {
@@ -25,6 +26,13 @@ function Dashboard() {
       return { farms: farmsR.data ?? [], predictions: predsR.data ?? [], hasRecords: (recR.data?.length ?? 0) > 0 };
     },
   });
+
+  useEffect(() => {
+    if (!isLoading && data && data.farms.length === 0) {
+      navigate({ to: "/onboarding", replace: true });
+    }
+  }, [isLoading, data, navigate]);
+
 
   const farms = data?.farms ?? [];
   const preds = data?.predictions ?? [];
