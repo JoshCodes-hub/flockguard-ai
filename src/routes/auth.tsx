@@ -20,7 +20,7 @@ function Auth() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dashboard" });
+      if (data.session) navigate({ to: "/onboarding" });
     });
   }, [navigate]);
 
@@ -36,7 +36,7 @@ function Auth() {
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("Welcome back");
-    navigate({ to: "/dashboard" });
+    navigate({ to: "/onboarding" });
   }
 
   async function handleSignup(e: React.FormEvent) {
@@ -48,7 +48,7 @@ function Auth() {
       email: su.email,
       password: su.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
+        emailRedirectTo: `${window.location.origin}/onboarding`,
         data: { full_name: su.full_name, phone: su.phone, farm_name: su.farm_name },
       },
     });
