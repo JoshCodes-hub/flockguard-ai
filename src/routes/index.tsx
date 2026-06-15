@@ -74,6 +74,35 @@ function Landing() {
         </div>
       </section>
 
+      <section className="py-24 px-6 border-t border-border">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-16 animate-reveal">
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-4">END-TO-END WORKFLOW</p>
+            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tighter max-w-3xl">From farmer observation to a self-improving model.</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {WORKFLOW.map((s, i) => (
+              <div key={s.title} className="relative bg-surface border border-border p-6 animate-reveal" style={{ animationDelay: `${i * 100}ms` }}>
+                <div className="font-mono text-[10px] text-primary mb-4 tracking-widest">STEP {String(i + 1).padStart(2, "0")}</div>
+                <h3 className="text-xl font-extrabold tracking-tighter mb-2">{s.title}</h3>
+                <p className="text-sm text-foreground/60 leading-relaxed">{s.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-6 border-t border-border bg-surface">
+        <div className="max-w-7xl mx-auto">
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-6 text-center">BUILT WITH</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {STACK.map((s) => (
+              <span key={s} className="px-4 py-2 border border-border bg-background text-xs font-mono uppercase tracking-widest text-foreground/70">{s}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="py-24 px-6 border-t border-border" id="about">
         <div className="max-w-4xl mx-auto text-center animate-reveal">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-6">FOR FARMERS &amp; VETERINARIANS</p>
@@ -82,6 +111,7 @@ function Landing() {
           <Link to="/auth" className="inline-block px-10 py-4 bg-foreground text-background font-bold rounded-sm hover:bg-primary transition-colors">Create Free Account</Link>
         </div>
       </section>
+
 
       <footer className="border-t border-border py-12 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
@@ -105,6 +135,16 @@ const FEATURES = [
   { title: "Clinical Decision Support", body: "A rule-based engine analyzes vitals, symptoms, and environmental data to surface risk before it spreads." },
   { title: "Farm Health Score", body: "A single 0–100 score per farm summarizes flock health, mortality risk, and active disease alerts." },
   { title: "Image Analysis Module", body: "Upload or capture a bird photo and receive a confidence-scored diagnostic in seconds." },
-  { title: "Health Record Timeline", body: "Every record and prediction is preserved, building a verifiable history for each farm." },
+  { title: "Veterinarian Review Portal", body: "Licensed vets validate AI predictions across all farms, feeding a curated dataset back into the model." },
   { title: "IoT-Ready Architecture", body: "Designed to accept ESP32 temperature, humidity, feed, and water sensors when you're ready." },
 ];
+
+const WORKFLOW = [
+  { title: "Farmer Logs Observation", body: "A farmer records vitals, symptoms, or uploads a bird photo from any device." },
+  { title: "AI Generates Prediction", body: "The CDSE and vision model produce a disease prediction with confidence and risk level." },
+  { title: "Vet Verifies Diagnosis", body: "Licensed veterinarians review predictions in a dedicated portal and confirm or correct them." },
+  { title: "Dataset Trains Next Model", body: "Verified cases are exported as labeled training data for the next-generation ML model." },
+];
+
+const STACK = ["React 19", "TanStack Start", "TypeScript", "Tailwind v4", "Lovable Cloud", "Lovable AI Gateway", "Gemini Vision", "Recharts", "PostgreSQL", "Row-Level Security"];
+
