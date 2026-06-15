@@ -75,7 +75,7 @@ function NewRecord() {
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-3xl">
+    <div className="p-4 sm:p-6 md:p-10 max-w-3xl">
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-2">CLINICAL DECISION SUPPORT ENGINE</p>
       <h1 className="text-3xl md:text-4xl font-extrabold tracking-tighter mb-8">New Health Record</h1>
 

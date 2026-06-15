@@ -121,7 +121,7 @@ function VetPortal() {
   }
 
   return (
-    <div className="p-6 md:p-10 space-y-8">
+    <div className="p-4 sm:p-6 md:p-10 space-y-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-2">CLINICAL REVIEW</p>
@@ -139,27 +139,30 @@ function VetPortal() {
         <Stat label="LOW RISK" value={stats.low} accent="primary" />
       </div>
 
-      <div className="bg-surface border border-border p-4 flex flex-wrap items-center gap-3">
-        <Filter className="size-4 text-foreground/40" />
-        <Select label="Status" value={status} onChange={(v) => setStatus(v as typeof status)} options={[
-          { v: "unverified", l: "Unverified" }, { v: "verified", l: "Verified" }, { v: "all", l: "All" },
-        ]} />
-        <Select label="Risk" value={risk} onChange={(v) => setRisk(v as typeof risk)} options={[
-          { v: "all", l: "All risks" }, { v: "High", l: "High" }, { v: "Medium", l: "Medium" }, { v: "Low", l: "Low" },
-        ]} />
-        <Select label="Source" value={source} onChange={(v) => setSource(v as typeof source)} options={[
-          { v: "all", l: "All sources" }, { v: "cdse", l: "CDSE" }, { v: "vision_ai", l: "Vision AI" },
-        ]} />
-        <div className="ml-auto flex items-center gap-2">
+      <div className="bg-surface border border-border p-4 flex flex-col lg:flex-row lg:items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <Filter className="size-4 text-foreground/40" />
+          <Select label="Status" value={status} onChange={(v) => setStatus(v as typeof status)} options={[
+            { v: "unverified", l: "Unverified" }, { v: "verified", l: "Verified" }, { v: "all", l: "All" },
+          ]} />
+          <Select label="Risk" value={risk} onChange={(v) => setRisk(v as typeof risk)} options={[
+            { v: "all", l: "All risks" }, { v: "High", l: "High" }, { v: "Medium", l: "Medium" }, { v: "Low", l: "Low" },
+          ]} />
+          <Select label="Source" value={source} onChange={(v) => setSource(v as typeof source)} options={[
+            { v: "all", l: "All sources" }, { v: "cdse", l: "CDSE" }, { v: "vision_ai", l: "Vision AI" },
+          ]} />
+        </div>
+        <div className="flex flex-wrap items-center gap-2 lg:ml-auto">
           <span className="text-xs font-mono text-foreground/50 uppercase tracking-widest">{selected.size} selected</span>
-          <button disabled={busy || selected.size === 0} onClick={() => bulk(true)} className="px-4 py-2 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest rounded-sm inline-flex items-center gap-2 disabled:opacity-40">
-            <ShieldCheck className="size-3.5" /> Verify Selected
+          <button disabled={busy || selected.size === 0} onClick={() => bulk(true)} className="px-3 py-2 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest rounded-sm inline-flex items-center gap-2 disabled:opacity-40">
+            <ShieldCheck className="size-3.5" /> Verify
           </button>
-          <button disabled={busy || selected.size === 0} onClick={() => bulk(false)} className="px-4 py-2 border border-border text-xs font-bold uppercase tracking-widest rounded-sm disabled:opacity-40">
+          <button disabled={busy || selected.size === 0} onClick={() => bulk(false)} className="px-3 py-2 border border-border text-xs font-bold uppercase tracking-widest rounded-sm disabled:opacity-40">
             Unverify
           </button>
         </div>
       </div>
+
 
       <div className="bg-surface border border-border overflow-x-auto">
         {isLoading ? (

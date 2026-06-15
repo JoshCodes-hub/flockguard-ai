@@ -180,7 +180,7 @@ function ReportsPage() {
 
       {farm && (
         <>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <Stat label="Health Score" value={`${healthScore}/100`} accent />
             <Stat label="Total Birds" value={String(farm.bird_count)} />
             <Stat label="Total Predictions" value={String(farmPreds.length)} />

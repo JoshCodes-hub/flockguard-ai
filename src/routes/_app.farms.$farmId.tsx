@@ -41,7 +41,7 @@ function FarmDetail() {
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
-    <div className="p-6 md:p-10 space-y-8">
+    <div className="p-4 sm:p-6 md:p-10 space-y-8">
       <Link to="/farms" className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-foreground/60 hover:text-primary"><ArrowLeft className="size-3.5" /> All Farms</Link>
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">

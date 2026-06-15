@@ -53,7 +53,7 @@ function PredictionPage() {
   const riskColor = pred.risk_level === "High" ? "bg-destructive text-destructive-foreground" : pred.risk_level === "Medium" ? "bg-warning text-background" : "bg-primary text-primary-foreground";
 
   return (
-    <div className="p-6 md:p-10 space-y-6 max-w-5xl">
+    <div className="p-4 sm:p-6 md:p-10 space-y-6 max-w-5xl">
       <Link to="/dashboard" className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-foreground/60 hover:text-primary"><ArrowLeft className="size-3.5" /> Dashboard</Link>
 
       <div className="bg-foreground text-background p-8 md:p-12 rounded-sm">
