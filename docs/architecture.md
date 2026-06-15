@@ -44,14 +44,20 @@
 ## 2. The Feedback Loop (key differentiator)
 
 ```text
+   ┌────────────┐
+   │  TIER 1    │  Kaggle (Poultry Diseases ~6.8K imgs, Chicken Disease tabular),
+   │ SEED DATA  │  Mendeley fecal images, FAO/WOAH clinical bulletins
+   └─────┬──────┘
+         │  bootstraps
+         ▼
    ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
-   │  FARMER  │───▶ │   AI     │───▶ │   VET    │───▶ │ DATASET  │
-   │ observes │     │ predicts │     │ verifies │     │  trains  │
-   │  birds   │     │ disease  │     │  result  │     │  model   │
+   │  FARMER  │───▶ │   AI     │───▶ │   VET    │───▶ │ TIER 2   │
+   │ observes │     │ predicts │     │ verifies │     │ FIELD    │
+   │  birds   │     │ disease  │     │  result  │     │ DATASET  │
    └──────────┘     └──────────┘     └──────────┘     └─────┬────┘
-        ▲                                                   │
-        └───────────────────────────────────────────────────┘
-                       Self-improving system
+         ▲                                                  │
+         └──────────────────────────────────────────────────┘
+                  Self-improving system (Ghana-specific)
 ```
 
 ## 3. Component Responsibilities
