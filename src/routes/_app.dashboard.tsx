@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { computeFarmHealthScore } from "@/lib/disease-engine";
 import { Activity, AlertTriangle, Leaf, ScanLine, Stethoscope, Upload } from "lucide-react";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — PoultryGuard AI" }] }),
@@ -50,6 +51,10 @@ function Dashboard() {
         <StatCard label="ACTIVE ALERTS" value={String(activeAlerts).padStart(2, "0")} sub={activeAlerts === 0 ? "All clear" : "Requires review"} accent={activeAlerts === 0 ? "primary" : "danger"} />
         <StatCard label="PREDICTIONS RUN" value={preds.length.toLocaleString()} sub="All time" />
       </div>
+
+      {!isLoading && preds.length > 0 && <ChartsSection preds={preds} />}
+
+
 
       <div className="bg-surface border border-border p-6">
         <div className="flex items-center justify-between mb-6">
@@ -138,6 +143,107 @@ function EmptyState() {
       <AlertTriangle className="size-8 text-foreground/30 mx-auto mb-3" />
       <p className="text-sm text-foreground/60 mb-4">No predictions yet. Add a farm and submit a health record to get started.</p>
       <Link to="/farms" className="inline-block px-5 py-2.5 bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest rounded-sm">Create First Farm</Link>
+    </div>
+  );
+}
+
+type Pred = { id: string; prediction: string; confidence: number | string; risk_level: string; prediction_source: string; created_at: string };
+
+function ChartsSection({ preds }: { preds: Pred[] }) {
+  // Last 14 days health trend + volume
+  const days: { date: string; label: string; score: number; count: number }[] = [];
+  const now = new Date();
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const dayPreds = preds.filter((p) => p.created_at.slice(0, 10) === key);
+    const score = dayPreds.length
+      ? computeFarmHealthScore(dayPreds.map((p) => ({ ...p, confidence: Number(p.confidence) })))
+      : 100;
+    days.push({ date: key, label: d.toLocaleDateString(undefined, { month: "short", day: "numeric" }), score, count: dayPreds.length });
+  }
+
+  // Disease breakdown
+  const counts = new Map<string, number>();
+  preds.forEach((p) => counts.set(p.prediction, (counts.get(p.prediction) ?? 0) + 1));
+  const diseases = Array.from(counts.entries())
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 6);
+
+  // Risk distribution
+  const risk = ["High", "Medium", "Low"].map((level) => ({
+    level,
+    count: preds.filter((p) => p.risk_level === level).length,
+  }));
+  const riskColors: Record<string, string> = { High: "hsl(var(--destructive))", Medium: "hsl(var(--warning))", Low: "hsl(var(--primary))" };
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="bg-surface border border-border p-6 lg:col-span-2">
+        <p className="font-mono text-[10px] text-foreground/40 uppercase tracking-widest mb-1">TREND · 14 DAYS</p>
+        <h3 className="font-extrabold tracking-tighter text-xl mb-4">Health Score Over Time</h3>
+        <ResponsiveContainer width="100%" height={220}>
+          <AreaChart data={days} margin={{ left: -20, right: 8, top: 8, bottom: 0 }}>
+            <defs>
+              <linearGradient id="hg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: "hsl(var(--foreground) / 0.5)" }} />
+            <YAxis domain={[0, 100]} tick={{ fontSize: 10, fill: "hsl(var(--foreground) / 0.5)" }} />
+            <Tooltip contentStyle={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))", fontSize: 12 }} />
+            <Area type="monotone" dataKey="score" stroke="hsl(var(--primary))" strokeWidth={2} fill="url(#hg)" />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="bg-surface border border-border p-6">
+        <p className="font-mono text-[10px] text-foreground/40 uppercase tracking-widest mb-1">RISK MIX</p>
+        <h3 className="font-extrabold tracking-tighter text-xl mb-4">Risk Distribution</h3>
+        <ResponsiveContainer width="100%" height={220}>
+          <BarChart data={risk} margin={{ left: -20, right: 8, top: 8, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis dataKey="level" tick={{ fontSize: 10, fill: "hsl(var(--foreground) / 0.5)" }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: "hsl(var(--foreground) / 0.5)" }} />
+            <Tooltip contentStyle={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))", fontSize: 12 }} />
+            <Bar dataKey="count" radius={[2, 2, 0, 0]}>
+              {risk.map((r) => <Cell key={r.level} fill={riskColors[r.level]} />)}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="bg-surface border border-border p-6 lg:col-span-2">
+        <p className="font-mono text-[10px] text-foreground/40 uppercase tracking-widest mb-1">DETECTIONS</p>
+        <h3 className="font-extrabold tracking-tighter text-xl mb-4">Top Conditions Detected</h3>
+        <ResponsiveContainer width="100%" height={220}>
+          <BarChart data={diseases} layout="vertical" margin={{ left: 20, right: 16, top: 8, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis type="number" allowDecimals={false} tick={{ fontSize: 10, fill: "hsl(var(--foreground) / 0.5)" }} />
+            <YAxis type="category" dataKey="name" width={120} tick={{ fontSize: 11, fill: "hsl(var(--foreground) / 0.7)" }} />
+            <Tooltip contentStyle={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))", fontSize: 12 }} />
+            <Bar dataKey="value" fill="hsl(var(--primary))" radius={[0, 2, 2, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="bg-surface border border-border p-6">
+        <p className="font-mono text-[10px] text-foreground/40 uppercase tracking-widest mb-1">ACTIVITY</p>
+        <h3 className="font-extrabold tracking-tighter text-xl mb-4">Daily Prediction Volume</h3>
+        <ResponsiveContainer width="100%" height={220}>
+          <LineChart data={days} margin={{ left: -20, right: 8, top: 8, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis dataKey="label" tick={{ fontSize: 10, fill: "hsl(var(--foreground) / 0.5)" }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: "hsl(var(--foreground) / 0.5)" }} />
+            <Tooltip contentStyle={{ background: "hsl(var(--background))", border: "1px solid hsl(var(--border))", fontSize: 12 }} />
+            <Line type="monotone" dataKey="count" stroke="hsl(var(--foreground))" strokeWidth={2} dot={{ r: 3 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
