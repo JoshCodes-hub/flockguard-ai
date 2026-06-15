@@ -12,10 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppLearnRouteImport } from './routes/_app.learn'
 import { Route as AppIotRouteImport } from './routes/_app.iot'
 import { Route as AppImageAnalysisRouteImport } from './routes/_app.image-analysis'
 import { Route as AppFarmsRouteImport } from './routes/_app.farms'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
+import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
 import { Route as AppPredictionsIdRouteImport } from './routes/_app.predictions.$id'
 import { Route as AppHealthRecordNewRouteImport } from './routes/_app.health-record.new'
 import { Route as AppFarmsFarmIdRouteImport } from './routes/_app.farms.$farmId'
@@ -33,6 +37,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppLearnRoute = AppLearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppIotRoute = AppIotRouteImport.update({
   id: '/iot',
@@ -54,6 +63,21 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAssistantRoute = AppAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPredictionsIdRoute = AppPredictionsIdRouteImport.update({
   id: '/predictions/$id',
   path: '/predictions/$id',
@@ -73,10 +97,14 @@ const AppFarmsFarmIdRoute = AppFarmsFarmIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin': typeof AppAdminRoute
+  '/alerts': typeof AppAlertsRoute
+  '/assistant': typeof AppAssistantRoute
   '/dashboard': typeof AppDashboardRoute
   '/farms': typeof AppFarmsRouteWithChildren
   '/image-analysis': typeof AppImageAnalysisRoute
   '/iot': typeof AppIotRoute
+  '/learn': typeof AppLearnRoute
   '/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/health-record/new': typeof AppHealthRecordNewRoute
   '/predictions/$id': typeof AppPredictionsIdRoute
@@ -84,10 +112,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/admin': typeof AppAdminRoute
+  '/alerts': typeof AppAlertsRoute
+  '/assistant': typeof AppAssistantRoute
   '/dashboard': typeof AppDashboardRoute
   '/farms': typeof AppFarmsRouteWithChildren
   '/image-analysis': typeof AppImageAnalysisRoute
   '/iot': typeof AppIotRoute
+  '/learn': typeof AppLearnRoute
   '/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/health-record/new': typeof AppHealthRecordNewRoute
   '/predictions/$id': typeof AppPredictionsIdRoute
@@ -97,10 +129,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_app/admin': typeof AppAdminRoute
+  '/_app/alerts': typeof AppAlertsRoute
+  '/_app/assistant': typeof AppAssistantRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/farms': typeof AppFarmsRouteWithChildren
   '/_app/image-analysis': typeof AppImageAnalysisRoute
   '/_app/iot': typeof AppIotRoute
+  '/_app/learn': typeof AppLearnRoute
   '/_app/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/_app/health-record/new': typeof AppHealthRecordNewRoute
   '/_app/predictions/$id': typeof AppPredictionsIdRoute
@@ -110,10 +146,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/admin'
+    | '/alerts'
+    | '/assistant'
     | '/dashboard'
     | '/farms'
     | '/image-analysis'
     | '/iot'
+    | '/learn'
     | '/farms/$farmId'
     | '/health-record/new'
     | '/predictions/$id'
@@ -121,10 +161,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/admin'
+    | '/alerts'
+    | '/assistant'
     | '/dashboard'
     | '/farms'
     | '/image-analysis'
     | '/iot'
+    | '/learn'
     | '/farms/$farmId'
     | '/health-record/new'
     | '/predictions/$id'
@@ -133,10 +177,14 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/auth'
+    | '/_app/admin'
+    | '/_app/alerts'
+    | '/_app/assistant'
     | '/_app/dashboard'
     | '/_app/farms'
     | '/_app/image-analysis'
     | '/_app/iot'
+    | '/_app/learn'
     | '/_app/farms/$farmId'
     | '/_app/health-record/new'
     | '/_app/predictions/$id'
@@ -171,6 +219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/learn': {
+      id: '/_app/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof AppLearnRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/iot': {
       id: '/_app/iot'
       path: '/iot'
@@ -197,6 +252,27 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/assistant': {
+      id: '/_app/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AppAssistantRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/predictions/$id': {
@@ -236,19 +312,27 @@ const AppFarmsRouteWithChildren = AppFarmsRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
+  AppAlertsRoute: typeof AppAlertsRoute
+  AppAssistantRoute: typeof AppAssistantRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppFarmsRoute: typeof AppFarmsRouteWithChildren
   AppImageAnalysisRoute: typeof AppImageAnalysisRoute
   AppIotRoute: typeof AppIotRoute
+  AppLearnRoute: typeof AppLearnRoute
   AppHealthRecordNewRoute: typeof AppHealthRecordNewRoute
   AppPredictionsIdRoute: typeof AppPredictionsIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
+  AppAlertsRoute: AppAlertsRoute,
+  AppAssistantRoute: AppAssistantRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppFarmsRoute: AppFarmsRouteWithChildren,
   AppImageAnalysisRoute: AppImageAnalysisRoute,
   AppIotRoute: AppIotRoute,
+  AppLearnRoute: AppLearnRoute,
   AppHealthRecordNewRoute: AppHealthRecordNewRoute,
   AppPredictionsIdRoute: AppPredictionsIdRoute,
 }
@@ -263,13 +347,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
