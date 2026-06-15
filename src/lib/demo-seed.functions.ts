@@ -243,8 +243,9 @@ export const clearDemoData = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: list } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 });
+    const demoEmails: string[] = Object.values(DEMO_EMAILS);
     const demoUsers = (list?.users ?? []).filter((u) =>
-      Object.values(DEMO_EMAILS).includes(u.email ?? ""),
+      demoEmails.includes(u.email ?? ""),
     );
 
     let deletedUsers = 0;
