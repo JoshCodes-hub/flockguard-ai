@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppVetRouteImport } from './routes/_app.vet'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppLearnRouteImport } from './routes/_app.learn'
 import { Route as AppIotRouteImport } from './routes/_app.iot'
 import { Route as AppImageAnalysisRouteImport } from './routes/_app.image-analysis'
@@ -56,6 +57,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOnboardingRoute = AppOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLearnRoute = AppLearnRouteImport.update({
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/image-analysis': typeof AppImageAnalysisRoute
   '/iot': typeof AppIotRoute
   '/learn': typeof AppLearnRoute
+  '/onboarding': typeof AppOnboardingRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
   '/vet': typeof AppVetRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/image-analysis': typeof AppImageAnalysisRoute
   '/iot': typeof AppIotRoute
   '/learn': typeof AppLearnRoute
+  '/onboarding': typeof AppOnboardingRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
   '/vet': typeof AppVetRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/_app/image-analysis': typeof AppImageAnalysisRoute
   '/_app/iot': typeof AppIotRoute
   '/_app/learn': typeof AppLearnRoute
+  '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/vet': typeof AppVetRoute
@@ -201,6 +210,7 @@ export interface FileRouteTypes {
     | '/image-analysis'
     | '/iot'
     | '/learn'
+    | '/onboarding'
     | '/reports'
     | '/settings'
     | '/vet'
@@ -221,6 +231,7 @@ export interface FileRouteTypes {
     | '/image-analysis'
     | '/iot'
     | '/learn'
+    | '/onboarding'
     | '/reports'
     | '/settings'
     | '/vet'
@@ -242,6 +253,7 @@ export interface FileRouteTypes {
     | '/_app/image-analysis'
     | '/_app/iot'
     | '/_app/learn'
+    | '/_app/onboarding'
     | '/_app/reports'
     | '/_app/settings'
     | '/_app/vet'
@@ -298,6 +310,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/onboarding': {
+      id: '/_app/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AppOnboardingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/learn': {
@@ -417,6 +436,7 @@ interface AppRouteChildren {
   AppImageAnalysisRoute: typeof AppImageAnalysisRoute
   AppIotRoute: typeof AppIotRoute
   AppLearnRoute: typeof AppLearnRoute
+  AppOnboardingRoute: typeof AppOnboardingRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppVetRoute: typeof AppVetRoute
@@ -435,6 +455,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppImageAnalysisRoute: AppImageAnalysisRoute,
   AppIotRoute: AppIotRoute,
   AppLearnRoute: AppLearnRoute,
+  AppOnboardingRoute: AppOnboardingRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppVetRoute: AppVetRoute,
