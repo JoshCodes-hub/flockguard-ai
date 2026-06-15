@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppVetRouteImport } from './routes/_app.vet'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppLearnRouteImport } from './routes/_app.learn'
 import { Route as AppIotRouteImport } from './routes/_app.iot'
@@ -45,6 +46,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppVetRoute = AppVetRouteImport.update({
   id: '/vet',
   path: '/vet',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
 const AppReportsRoute = AppReportsRouteImport.update({
@@ -132,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/iot': typeof AppIotRoute
   '/learn': typeof AppLearnRoute
   '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
   '/vet': typeof AppVetRoute
   '/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/health-record/new': typeof AppHealthRecordNewRoute
@@ -151,6 +158,7 @@ export interface FileRoutesByTo {
   '/iot': typeof AppIotRoute
   '/learn': typeof AppLearnRoute
   '/reports': typeof AppReportsRoute
+  '/settings': typeof AppSettingsRoute
   '/vet': typeof AppVetRoute
   '/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/health-record/new': typeof AppHealthRecordNewRoute
@@ -172,6 +180,7 @@ export interface FileRoutesById {
   '/_app/iot': typeof AppIotRoute
   '/_app/learn': typeof AppLearnRoute
   '/_app/reports': typeof AppReportsRoute
+  '/_app/settings': typeof AppSettingsRoute
   '/_app/vet': typeof AppVetRoute
   '/_app/farms/$farmId': typeof AppFarmsFarmIdRoute
   '/_app/health-record/new': typeof AppHealthRecordNewRoute
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
     | '/iot'
     | '/learn'
     | '/reports'
+    | '/settings'
     | '/vet'
     | '/farms/$farmId'
     | '/health-record/new'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/iot'
     | '/learn'
     | '/reports'
+    | '/settings'
     | '/vet'
     | '/farms/$farmId'
     | '/health-record/new'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/_app/iot'
     | '/_app/learn'
     | '/_app/reports'
+    | '/_app/settings'
     | '/_app/vet'
     | '/_app/farms/$farmId'
     | '/_app/health-record/new'
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/vet'
       fullPath: '/vet'
       preLoaderRoute: typeof AppVetRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/reports': {
@@ -399,6 +418,7 @@ interface AppRouteChildren {
   AppIotRoute: typeof AppIotRoute
   AppLearnRoute: typeof AppLearnRoute
   AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppVetRoute: typeof AppVetRoute
   AppHealthRecordNewRoute: typeof AppHealthRecordNewRoute
   AppPredictionsIdRoute: typeof AppPredictionsIdRoute
@@ -416,6 +436,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppIotRoute: AppIotRoute,
   AppLearnRoute: AppLearnRoute,
   AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppVetRoute: AppVetRoute,
   AppHealthRecordNewRoute: AppHealthRecordNewRoute,
   AppPredictionsIdRoute: AppPredictionsIdRoute,
