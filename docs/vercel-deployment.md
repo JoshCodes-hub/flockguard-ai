@@ -61,40 +61,101 @@ git push -u origin main
 
 ---
 
-## Step 3: Add Environment Variables
+## Step 3: Add Environment Variables (Settings → Environment Variables)
 
-After the first (failed) deploy, go to your project in Vercel dashboard:
+**What are environment variables?** Think of them as "secret settings" your app needs to connect to its database and authentication system. Without them, your app won't know where your backend (Lovable Cloud / Supabase) is located.
 
-1. Click **Settings → Environment Variables**.
-2. Add **EVERY variable** listed below exactly as shown.
+**You need to add 7 variables total.** Here is exactly what to copy and where each value comes from.
 
-### Client-side variables (needed by the browser)
+---
 
-| Variable Name | Value | Where to find it |
-|--------------|-------|------------------|
-| `VITE_SUPABASE_URL` | `https://xdrlazherzgzxuklismu.supabase.co` | Lovable Cloud settings or `.env` file |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhkcmxhemhlcnpnenh1a2xpc211Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1MzQ1NDEsImV4cCI6MjA5NzExMDU0MX0.a7lQmy_WHvt_2RWyXWgDlzumujnThA-31divRFw-wnc` | `.env` file (starts with `eyJhbGc...`) |
-| `VITE_SUPABASE_PROJECT_ID` | `xdrlazherzgzxuklismu` | `.env` file |
+### Where to find ALL your values
 
-### Server-side variables (needed by API routes & server functions)
+Open your project's `.env` file (it's in the main folder, next to `package.json`). It looks like this:
 
-| Variable Name | Value | Where to find it |
-|--------------|-------|------------------|
-| `SUPABASE_URL` | Same as `VITE_SUPABASE_URL` | Copy from above |
-| `SUPABASE_PUBLISHABLE_KEY` | Same as `VITE_SUPABASE_PUBLISHABLE_KEY` | Copy from above |
-| `SUPABASE_SERVICE_ROLE_KEY` | `YOUR_SERVICE_ROLE_KEY` | ⚠️ **See note below** |
-| `SUPABASE_PROJECT_ID` | Same as `VITE_SUPABASE_PROJECT_ID` | Copy from above |
+```
+VITE_SUPABASE_URL=https://xdrlazherzgzxuklismu.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=eyJhbGc...
+VITE_SUPABASE_PROJECT_ID=xdrlazherzgzxuklismu
+```
 
-> **Important**: The `SUPABASE_SERVICE_ROLE_KEY` is a **secret server-only key**. It bypasses all database security rules. You can find it in your Lovable Cloud panel under **Project Settings → API**. If you don't have access to it, your server functions that use `supabaseAdmin` will fail. For a school project, you may not need it if you only use `requireSupabaseAuth` (user-authenticated) flows.
+**Copy every value from that file.** You will paste them into Vercel in the steps below.
 
-### How to add them in Vercel
+---
 
-1. In the **Environment Variables** page:
-   - **Key**: Paste the variable name (e.g., `VITE_SUPABASE_URL`).
-   - **Value**: Paste the value.
-   - **Environment**: Select **Production**, **Preview**, and **Development** (all three).
-   - Click **Save**.
-2. Repeat for every variable above.
+### How to add them in Vercel (one by one)
+
+1. In your Vercel project dashboard, click **Settings** at the top.
+2. On the left sidebar, click **Environment Variables**.
+3. You will see a form with three boxes: **Key**, **Value**, and **Environment**.
+
+Now add each variable below using that form:
+
+#### Group 1 — Client-side variables (browser needs these)
+
+These start with `VITE_` because the browser needs to see them.
+
+| # | Key (copy exactly) | Value (copy from your `.env` file) |
+|---|----------------------|-------------------------------------|
+| 1 | `VITE_SUPABASE_URL` | `https://xdrlazherzgzxuklismu.supabase.co` |
+| 2 | `VITE_SUPABASE_PUBLISHABLE_KEY` | The long `eyJhbGc...` string from `.env` |
+| 3 | `VITE_SUPABASE_PROJECT_ID` | `xdrlazherzgzxuklismu` |
+
+For each one:
+- Paste the **Key** exactly as shown in the table (including `VITE_`).
+- Paste the **Value** from your `.env` file.
+- Under **Environment**, tick all three boxes: **Production**, **Preview**, and **Development**.
+- Click **Save**.
+
+#### Group 2 — Server-side variables (backend API needs these)
+
+These do NOT start with `VITE_` because they stay secret on the server.
+
+| # | Key (copy exactly) | Value (copy from `.env` or use same as above) |
+|---|----------------------|-----------------------------------------------|
+| 4 | `SUPABASE_URL` | **Same as** `VITE_SUPABASE_URL` |
+| 5 | `SUPABASE_PUBLISHABLE_KEY` | **Same as** `VITE_SUPABASE_PUBLISHABLE_KEY` |
+| 6 | `SUPABASE_PROJECT_ID` | **Same as** `VITE_SUPABASE_PROJECT_ID` |
+| 7 | `SUPABASE_SERVICE_ROLE_KEY` | ⚠️ **See special note below** |
+
+For variables 4, 5, and 6: just copy-paste the same values you used in Group 1.
+
+---
+
+### Special note: `SUPABASE_SERVICE_ROLE_KEY`
+
+This is the **most secret key** in your project. It lets the server bypass all security rules. Think of it as a "master password."
+
+**Do you need it?**
+- If your app has an **Admin panel** or **Demo seeding** feature → **Yes, you need it.**
+- If your app is just a regular user app (sign up, log in, dashboard) → **You might not need it.**
+
+**Where to find it:**
+
+Unfortunately, on **Lovable Cloud**, this key is managed by the platform and is **not directly visible** to you in a dashboard. Here are your options:
+
+1. **If you have a `.env` file that already contains it** (e.g., `SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...`), just copy and paste it.
+2. **If you don't have it**, you have two choices:
+   - **Option A**: Ask your project supervisor or the person who set up the backend to share it with you.
+   - **Option B**: Skip it for now. Your app will work for most features (login, dashboard, diagnosis). Only admin/server-only features will fail. You can add it later.
+
+> **Security warning**: Never share this key in public. Never paste it in a WhatsApp group or public GitHub repo. It is a server-only secret.
+
+---
+
+### Quick checklist before moving on
+
+Make sure you have added these 7 keys in Vercel:
+
+- [ ] `VITE_SUPABASE_URL`
+- [ ] `VITE_SUPABASE_PUBLISHABLE_KEY`
+- [ ] `VITE_SUPABASE_PROJECT_ID`
+- [ ] `SUPABASE_URL`
+- [ ] `SUPABASE_PUBLISHABLE_KEY`
+- [ ] `SUPABASE_PROJECT_ID`
+- [ ] `SUPABASE_SERVICE_ROLE_KEY` (if you have it)
+
+If you are missing the Service Role key, that is okay — continue to Step 4.
 
 ---
 
