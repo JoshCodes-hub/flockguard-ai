@@ -15,7 +15,7 @@ const SENSORS = [
 
 function IoT() {
   return (
-    <div className="p-6 md:p-10 space-y-8 max-w-5xl">
+    <div className="p-4 sm:p-6 md:p-10 space-y-8 max-w-5xl">
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-2">FUTURE INTEGRATION</p>
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tighter">IoT Sensor Monitoring</h1>

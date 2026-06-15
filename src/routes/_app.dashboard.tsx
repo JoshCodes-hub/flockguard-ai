@@ -42,7 +42,7 @@ function Dashboard() {
   const healthyBirds = Math.round(totalBirds * (healthScore / 100));
 
   return (
-    <div className="p-6 md:p-10 space-y-8">
+    <div className="p-4 sm:p-6 md:p-10 space-y-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-2">OPERATIONAL OVERVIEW</p>
