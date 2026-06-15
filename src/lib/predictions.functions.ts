@@ -230,3 +230,31 @@ export const verifyPrediction = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+const BulkVerifyInput = z.object({
+  prediction_ids: z.array(z.string().uuid()).min(1).max(200),
+  is_verified: z.boolean(),
+  notes: z.string().max(2000).optional(),
+});
+
+export const bulkVerifyPredictions = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => BulkVerifyInput.parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: isVet } = await supabase.rpc("has_role", { _user_id: userId, _role: "veterinarian" });
+    const { data: isAdmin } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+    if (!isVet && !isAdmin) throw new Error("Forbidden: veterinarian role required");
+    const { error, count } = await supabase
+      .from("predictions")
+      .update({
+        is_verified: data.is_verified,
+        verified_by: userId,
+        verification_notes: data.notes ?? null,
+        verified_at: new Date().toISOString(),
+      }, { count: "exact" })
+      .in("id", data.prediction_ids);
+    if (error) throw new Error(error.message);
+    return { ok: true, count: count ?? data.prediction_ids.length };
+  });
+
