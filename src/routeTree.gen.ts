@@ -9,38 +9,161 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIotRouteImport } from './routes/_app.iot'
+import { Route as AppImageAnalysisRouteImport } from './routes/_app.image-analysis'
+import { Route as AppFarmsRouteImport } from './routes/_app.farms'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppPredictionsIdRouteImport } from './routes/_app.predictions.$id'
+import { Route as AppHealthRecordNewRouteImport } from './routes/_app.health-record.new'
+import { Route as AppFarmsFarmIdRouteImport } from './routes/_app.farms.$farmId'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIotRoute = AppIotRouteImport.update({
+  id: '/iot',
+  path: '/iot',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppImageAnalysisRoute = AppImageAnalysisRouteImport.update({
+  id: '/image-analysis',
+  path: '/image-analysis',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFarmsRoute = AppFarmsRouteImport.update({
+  id: '/farms',
+  path: '/farms',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPredictionsIdRoute = AppPredictionsIdRouteImport.update({
+  id: '/predictions/$id',
+  path: '/predictions/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppHealthRecordNewRoute = AppHealthRecordNewRouteImport.update({
+  id: '/health-record/new',
+  path: '/health-record/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFarmsFarmIdRoute = AppFarmsFarmIdRouteImport.update({
+  id: '/$farmId',
+  path: '/$farmId',
+  getParentRoute: () => AppFarmsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/farms': typeof AppFarmsRouteWithChildren
+  '/image-analysis': typeof AppImageAnalysisRoute
+  '/iot': typeof AppIotRoute
+  '/farms/$farmId': typeof AppFarmsFarmIdRoute
+  '/health-record/new': typeof AppHealthRecordNewRoute
+  '/predictions/$id': typeof AppPredictionsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/farms': typeof AppFarmsRouteWithChildren
+  '/image-analysis': typeof AppImageAnalysisRoute
+  '/iot': typeof AppIotRoute
+  '/farms/$farmId': typeof AppFarmsFarmIdRoute
+  '/health-record/new': typeof AppHealthRecordNewRoute
+  '/predictions/$id': typeof AppPredictionsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/farms': typeof AppFarmsRouteWithChildren
+  '/_app/image-analysis': typeof AppImageAnalysisRoute
+  '/_app/iot': typeof AppIotRoute
+  '/_app/farms/$farmId': typeof AppFarmsFarmIdRoute
+  '/_app/health-record/new': typeof AppHealthRecordNewRoute
+  '/_app/predictions/$id': typeof AppPredictionsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/farms'
+    | '/image-analysis'
+    | '/iot'
+    | '/farms/$farmId'
+    | '/health-record/new'
+    | '/predictions/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/farms'
+    | '/image-analysis'
+    | '/iot'
+    | '/farms/$farmId'
+    | '/health-record/new'
+    | '/predictions/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/auth'
+    | '/_app/dashboard'
+    | '/_app/farms'
+    | '/_app/image-analysis'
+    | '/_app/iot'
+    | '/_app/farms/$farmId'
+    | '/_app/health-record/new'
+    | '/_app/predictions/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +171,94 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/iot': {
+      id: '/_app/iot'
+      path: '/iot'
+      fullPath: '/iot'
+      preLoaderRoute: typeof AppIotRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/image-analysis': {
+      id: '/_app/image-analysis'
+      path: '/image-analysis'
+      fullPath: '/image-analysis'
+      preLoaderRoute: typeof AppImageAnalysisRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/farms': {
+      id: '/_app/farms'
+      path: '/farms'
+      fullPath: '/farms'
+      preLoaderRoute: typeof AppFarmsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/predictions/$id': {
+      id: '/_app/predictions/$id'
+      path: '/predictions/$id'
+      fullPath: '/predictions/$id'
+      preLoaderRoute: typeof AppPredictionsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/health-record/new': {
+      id: '/_app/health-record/new'
+      path: '/health-record/new'
+      fullPath: '/health-record/new'
+      preLoaderRoute: typeof AppHealthRecordNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/farms/$farmId': {
+      id: '/_app/farms/$farmId'
+      path: '/$farmId'
+      fullPath: '/farms/$farmId'
+      preLoaderRoute: typeof AppFarmsFarmIdRouteImport
+      parentRoute: typeof AppFarmsRoute
+    }
   }
 }
 
+interface AppFarmsRouteChildren {
+  AppFarmsFarmIdRoute: typeof AppFarmsFarmIdRoute
+}
+
+const AppFarmsRouteChildren: AppFarmsRouteChildren = {
+  AppFarmsFarmIdRoute: AppFarmsFarmIdRoute,
+}
+
+const AppFarmsRouteWithChildren = AppFarmsRoute._addFileChildren(
+  AppFarmsRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppFarmsRoute: typeof AppFarmsRouteWithChildren
+  AppImageAnalysisRoute: typeof AppImageAnalysisRoute
+  AppIotRoute: typeof AppIotRoute
+  AppHealthRecordNewRoute: typeof AppHealthRecordNewRoute
+  AppPredictionsIdRoute: typeof AppPredictionsIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppFarmsRoute: AppFarmsRouteWithChildren,
+  AppImageAnalysisRoute: AppImageAnalysisRoute,
+  AppIotRoute: AppIotRoute,
+  AppHealthRecordNewRoute: AppHealthRecordNewRoute,
+  AppPredictionsIdRoute: AppPredictionsIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
