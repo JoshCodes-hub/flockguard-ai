@@ -206,3 +206,27 @@ function Bar({ label, value, total, color }: { label: string; value: number; tot
     </div>
   );
 }
+
+function SourceRow({ name, meta, detail, href }: { name: string; meta: string; detail: string; href: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="block p-3 -mx-3 rounded-sm hover:bg-foreground/5 transition-colors group">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-medium">{name}</p>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-foreground/50 mt-0.5">{meta}</p>
+          <p className="text-xs text-foreground/60 mt-1">{detail}</p>
+        </div>
+        <ExternalLink className="size-3.5 text-foreground/40 group-hover:text-primary shrink-0 mt-1" />
+      </div>
+    </a>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="p-3 border border-border rounded-sm">
+      <p className="font-display text-2xl tracking-tight">{value}</p>
+      <p className="font-mono text-[9px] uppercase tracking-widest text-foreground/50 mt-1">{label}</p>
+    </div>
+  );
+}
