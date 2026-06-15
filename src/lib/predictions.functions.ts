@@ -69,7 +69,7 @@ export const submitHealthRecord = createServerFn({ method: "POST" })
         risk_level: result.risk,
         recommendation: result.recommendation,
         prediction_source: "rule_engine",
-        factors: result.factors as unknown as Record<string, unknown>,
+        factors: JSON.parse(JSON.stringify(result.factors)),
       })
       .select()
       .single();
@@ -189,7 +189,7 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
         risk_level,
         recommendation,
         prediction_source: "vision_ai",
-        factors: factors as unknown as Record<string, unknown>,
+        factors: JSON.parse(JSON.stringify(factors)),
       })
       .select()
       .single();
