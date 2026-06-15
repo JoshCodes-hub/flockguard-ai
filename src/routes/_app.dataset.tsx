@@ -49,7 +49,7 @@ function DatasetPage() {
         </p>
       </header>
 
-      <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <StatCard icon={Image} label="Total Images" value={imgs.length} />
         <StatCard icon={CheckCircle2} label="Verified Cases" value={verified} tone="primary" />
         <StatCard icon={XCircle} label="Unverified" value={unverified} tone="muted" />
