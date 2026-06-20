@@ -10,7 +10,7 @@ const MlPredictInput = z.object({
   symptoms: z.array(z.string()).default([]),
 });
 
-const ML_API_URL = process.env.ML_API_URL ?? "http://localhost:8000";
+const ML_API_URL = process.env.ML_API_URL ?? "https://poultry-ml-api.onrender.com";
 
 export const predictWithMlModel = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => MlPredictInput.parse(d))
