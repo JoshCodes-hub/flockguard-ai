@@ -47,7 +47,9 @@ export const submitHealthRecord = createServerFn({ method: "POST" })
       .single();
     if (recErr || !record) throw new Error(recErr?.message ?? "Failed to save record");
 
-    // Run Clinical Decision Support Engine
+    // ── PRIMARY BRAIN: try the trained ML model first ──
+    // If ML_API_URL is set and the API is reachable, use the user's Random Forest model.
+    // Otherwise, fall back to the rule-based clinical engine.
     const input: HealthInput = {
       temperature: data.temperature ?? null,
       humidity: data.humidity ?? null,
@@ -56,7 +58,41 @@ export const submitHealthRecord = createServerFn({ method: "POST" })
       activityLevel: (data.activity_level ?? null) as ActivityLevel | null,
       symptoms: data.symptoms,
     };
-    const result = runClinicalEngine(input);
+
+    let result = runClinicalEngine(input);
+    let predictionSource: "ml_model" | "rule_engine" = "rule_engine";
+
+    const mlApiUrl = process.env.ML_API_URL;
+    if (mlApiUrl) {
+      try {
+        const mlResp = await fetch(`${mlApiUrl}/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            temperature: data.temperature ?? 41,
+            humidity: data.humidity ?? 60,
+            feed_intake: data.feed_intake ?? "Medium",
+            water_consumption: data.water_consumption ?? "Medium",
+            activity_level: data.activity_level ?? "Active",
+            symptoms: data.symptoms,
+          }),
+          signal: AbortSignal.timeout(8000),
+        });
+        if (mlResp.ok) {
+          const ml = await mlResp.json();
+          // Merge ML model output with rule-engine recommendation/factors
+          result = {
+            ...result,
+            prediction: String(ml.prediction ?? result.prediction),
+            confidence: Math.round(Number(ml.confidence ?? result.confidence)),
+            risk: (ml.risk_level as "Low" | "Medium" | "High") ?? result.risk,
+          };
+          predictionSource = "ml_model";
+        }
+      } catch {
+        // Silent fall-through to rule engine result already in `result`
+      }
+    }
 
     const { data: pred, error: predErr } = await supabase
       .from("predictions")
@@ -68,15 +104,16 @@ export const submitHealthRecord = createServerFn({ method: "POST" })
         confidence: result.confidence,
         risk_level: result.risk,
         recommendation: result.recommendation,
-        prediction_source: "rule_engine",
+        prediction_source: predictionSource,
         factors: JSON.parse(JSON.stringify(result.factors)),
       })
       .select()
       .single();
     if (predErr || !pred) throw new Error(predErr?.message ?? "Failed to save prediction");
 
-    return { prediction_id: pred.id, ...result };
+    return { prediction_id: pred.id, source: predictionSource, ...result };
   });
+
 
 const ImageAnalysisInput = z.object({
   farm_id: z.string().uuid(),
