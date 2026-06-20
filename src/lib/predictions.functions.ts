@@ -62,7 +62,7 @@ export const submitHealthRecord = createServerFn({ method: "POST" })
     let result = runClinicalEngine(input);
     let predictionSource: "ml_model" | "rule_engine" = "rule_engine";
 
-    const mlApiUrl = process.env.ML_API_URL;
+    const mlApiUrl = process.env.ML_API_URL ?? "https://poultry-ml-api.onrender.com";
     if (mlApiUrl) {
       try {
         const mlResp = await fetch(`${mlApiUrl}/predict`, {
