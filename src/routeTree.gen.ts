@@ -16,6 +16,7 @@ import { Route as AppVetRouteImport } from './routes/_app.vet'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
+import { Route as AppMlModelRouteImport } from './routes/_app.ml-model'
 import { Route as AppLearnRouteImport } from './routes/_app.learn'
 import { Route as AppIotRouteImport } from './routes/_app.iot'
 import { Route as AppImageAnalysisRouteImport } from './routes/_app.image-analysis'
@@ -62,6 +63,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
 const AppOnboardingRoute = AppOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMlModelRoute = AppMlModelRouteImport.update({
+  id: '/ml-model',
+  path: '/ml-model',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLearnRoute = AppLearnRouteImport.update({
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/image-analysis': typeof AppImageAnalysisRoute
   '/iot': typeof AppIotRoute
   '/learn': typeof AppLearnRoute
+  '/ml-model': typeof AppMlModelRoute
   '/onboarding': typeof AppOnboardingRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/image-analysis': typeof AppImageAnalysisRoute
   '/iot': typeof AppIotRoute
   '/learn': typeof AppLearnRoute
+  '/ml-model': typeof AppMlModelRoute
   '/onboarding': typeof AppOnboardingRoute
   '/reports': typeof AppReportsRoute
   '/settings': typeof AppSettingsRoute
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/_app/image-analysis': typeof AppImageAnalysisRoute
   '/_app/iot': typeof AppIotRoute
   '/_app/learn': typeof AppLearnRoute
+  '/_app/ml-model': typeof AppMlModelRoute
   '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/settings': typeof AppSettingsRoute
@@ -210,6 +219,7 @@ export interface FileRouteTypes {
     | '/image-analysis'
     | '/iot'
     | '/learn'
+    | '/ml-model'
     | '/onboarding'
     | '/reports'
     | '/settings'
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/image-analysis'
     | '/iot'
     | '/learn'
+    | '/ml-model'
     | '/onboarding'
     | '/reports'
     | '/settings'
@@ -253,6 +264,7 @@ export interface FileRouteTypes {
     | '/_app/image-analysis'
     | '/_app/iot'
     | '/_app/learn'
+    | '/_app/ml-model'
     | '/_app/onboarding'
     | '/_app/reports'
     | '/_app/settings'
@@ -317,6 +329,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof AppOnboardingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ml-model': {
+      id: '/_app/ml-model'
+      path: '/ml-model'
+      fullPath: '/ml-model'
+      preLoaderRoute: typeof AppMlModelRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/learn': {
@@ -436,6 +455,7 @@ interface AppRouteChildren {
   AppImageAnalysisRoute: typeof AppImageAnalysisRoute
   AppIotRoute: typeof AppIotRoute
   AppLearnRoute: typeof AppLearnRoute
+  AppMlModelRoute: typeof AppMlModelRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -455,6 +475,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppImageAnalysisRoute: AppImageAnalysisRoute,
   AppIotRoute: AppIotRoute,
   AppLearnRoute: AppLearnRoute,
+  AppMlModelRoute: AppMlModelRoute,
   AppOnboardingRoute: AppOnboardingRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
@@ -473,13 +494,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
