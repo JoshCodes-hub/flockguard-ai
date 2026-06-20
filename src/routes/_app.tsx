@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, Leaf, Stethoscope, Upload, Radio, LogOut, Menu, X, Sparkles, BookOpen, Bell, Shield, FileText, Database, FlaskConical, ClipboardCheck, Settings as SettingsIcon } from "lucide-react";
+import { LayoutDashboard, Leaf, Stethoscope, Upload, Radio, LogOut, Menu, X, Sparkles, BookOpen, Bell, Shield, FileText, Database, FlaskConical, ClipboardCheck, Settings as SettingsIcon, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_app")({
