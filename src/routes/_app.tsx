@@ -14,6 +14,7 @@ const NAV = [
   { to: "/health-record/new", label: "Health Record", icon: Stethoscope },
   { to: "/image-analysis", label: "Image Analysis", icon: Upload },
   { to: "/vet", label: "Vet Review", icon: ClipboardCheck },
+  { to: "/ml-model", label: "ML Model", icon: Brain },
   { to: "/assistant", label: "AI Assistant", icon: Sparkles },
   { to: "/alerts", label: "Alerts", icon: Bell },
   { to: "/reports", label: "Reports", icon: FileText },
