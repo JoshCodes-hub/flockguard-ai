@@ -77,7 +77,7 @@ function Auth() {
           <h1 className="font-serif italic text-5xl leading-tight mb-6">"Detect disease before it spreads through your flock."</h1>
           <p className="text-sm text-background/60">Trusted by farmers and veterinarians for early Avian Influenza and Newcastle Disease detection.</p>
         </div>
-        <p className="font-mono text-[10px] text-background/40 tracking-widest">© 2026 POULTRYGUARD AI</p>
+        <p className="font-mono text-[10px] text-background/40 tracking-widest">© 2026 POULTRYGUARD</p>
       </div>
 
       <div className="flex items-center justify-center p-6 md:p-12">
