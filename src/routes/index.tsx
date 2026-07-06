@@ -4,9 +4,9 @@ import heroChicken from "@/assets/hero-chicken.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "PoultryGuard AI — Smart Poultry Health Monitoring" },
+      { title: "PoultryGuard — Smart Poultry Health Monitoring" },
       { name: "description", content: "Detect Avian Influenza and Newcastle Disease early with AI-powered image analysis and a Clinical Decision Support Engine." },
-      { property: "og:title", content: "PoultryGuard AI" },
+      { property: "og:title", content: "PoultryGuard" },
       { property: "og:description", content: "AI-powered disease detection for sustainable poultry farming." },
     ],
   }),
@@ -107,7 +107,7 @@ function Landing() {
         <div className="max-w-4xl mx-auto text-center animate-reveal">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-6">FOR FARMERS &amp; VETERINARIANS</p>
           <h2 className="text-4xl md:text-6xl font-extrabold tracking-tighter mb-6">Built for sustainable livestock farming.</h2>
-          <p className="text-lg text-foreground/60 mb-10 max-w-2xl mx-auto">PoultryGuard AI gives every farmer access to clinical-grade disease detection — without needing a veterinarian on-site.</p>
+          <p className="text-lg text-foreground/60 mb-10 max-w-2xl mx-auto">PoultryGuard gives every farmer access to clinical-grade disease detection — without needing a veterinarian on-site.</p>
           <Link to="/auth" className="inline-block px-10 py-4 bg-foreground text-background font-bold rounded-sm hover:bg-primary transition-colors">Create Free Account</Link>
         </div>
       </section>

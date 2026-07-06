@@ -5,7 +5,7 @@ import { computeFarmHealthScore } from "@/lib/disease-engine";
 import { ArrowLeft, Stethoscope, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/_app/farms/$farmId")({
-  head: () => ({ meta: [{ title: "Farm Detail — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "Farm Detail — PoultryGuard" }] }),
   component: FarmDetail,
   notFoundComponent: () => <div className="p-10">Farm not found.</div>,
   errorComponent: ({ error }) => <div className="p-10 text-destructive">{error.message}</div>,

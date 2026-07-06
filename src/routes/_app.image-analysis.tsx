@@ -12,7 +12,7 @@ import { Loader2, Upload as UploadIcon, X } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute("/_app/image-analysis")({
-  head: () => ({ meta: [{ title: "Image Analysis — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "Image Analysis — PoultryGuard" }] }),
   validateSearch: z.object({ farm: z.string().optional() }),
   component: ImageAnalysis,
 });

@@ -7,7 +7,7 @@ import { Activity, AlertTriangle, Leaf, ScanLine, Stethoscope, Upload } from "lu
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 export const Route = createFileRoute("/_app/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — PoultryGuard" }] }),
   component: Dashboard,
 });
 

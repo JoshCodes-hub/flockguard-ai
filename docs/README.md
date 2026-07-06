@@ -1,4 +1,4 @@
-# PoultryGuard AI — Project Documentation
+# PoultryGuard — Project Documentation
 
 Defense-prep deliverables generated for the final-year project defense.
 

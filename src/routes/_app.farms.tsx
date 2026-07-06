@@ -10,7 +10,7 @@ import { Plus, Leaf, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/farms")({
-  head: () => ({ meta: [{ title: "Farms — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "Farms — PoultryGuard" }] }),
   component: Farms,
 });
 

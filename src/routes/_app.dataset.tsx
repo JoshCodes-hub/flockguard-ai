@@ -45,7 +45,7 @@ function DatasetPage() {
         <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-foreground/50 mb-2">/ Dataset Collection</p>
         <h1 className="font-display text-4xl md:text-5xl tracking-tight">Training Dataset</h1>
         <p className="text-foreground/60 mt-2 max-w-2xl">
-          PoultryGuard AI continuously gathers field-validated disease records and bird images. Veterinarian-verified cases form the training corpus for future machine-learning model upgrades (YOLOv8, Random Forest, XGBoost).
+          PoultryGuard continuously gathers field-validated disease records and bird images. Veterinarian-verified cases form the training corpus for future machine-learning model upgrades (YOLOv8, Random Forest, XGBoost).
         </p>
       </header>
 
@@ -97,7 +97,7 @@ function DatasetPage() {
           <div>
             <h2 className="font-display text-2xl tracking-tight mb-1">Two-Tier Dataset Strategy</h2>
             <p className="text-sm text-foreground/60 max-w-2xl">
-              PoultryGuard AI is pre-trained on publicly labeled poultry datasets and FAO clinical guidelines (Tier 1), then continuously improved with vet-verified field cases from Ghanaian farms (Tier 2).
+              PoultryGuard is pre-trained on publicly labeled poultry datasets and FAO clinical guidelines (Tier 1), then continuously improved with vet-verified field cases from Ghanaian farms (Tier 2).
             </p>
           </div>
         </div>

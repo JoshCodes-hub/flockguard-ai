@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { User, KeyRound, Mail, Shield } from "lucide-react";
 
 export const Route = createFileRoute("/_app/settings")({
-  head: () => ({ meta: [{ title: "Settings — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "Settings — PoultryGuard" }] }),
   component: SettingsPage,
 });
 

@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — PoultryGuard AI" }, { name: "description", content: "Sign in to PoultryGuard AI to monitor your poultry farm." }] }),
+  head: () => ({ meta: [{ title: "Sign in — PoultryGuard" }, { name: "description", content: "Sign in to PoultryGuard to monitor your poultry farm." }] }),
   component: Auth,
 });
 

@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, Circle, Leaf, Stethoscope, Sparkles, ArrowRight, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/onboarding")({
-  head: () => ({ meta: [{ title: "Get Started — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "Get Started — PoultryGuard" }] }),
   component: Onboarding,
 });
 
