@@ -117,7 +117,7 @@ function Landing() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
             <p className="font-extrabold text-lg uppercase tracking-tighter mb-4">PoultryGuard</p>
-            <p className="text-xs font-mono text-foreground/40">© 2026 POULTRYGUARD AI · SMART LIVESTOCK MONITORING</p>
+            <p className="text-xs font-mono text-foreground/40">© 2026 POULTRYGUARD · SMART LIVESTOCK MONITORING</p>
           </div>
           <div className="flex gap-8 text-xs font-bold uppercase tracking-widest">
             <a href="#about">About</a>
