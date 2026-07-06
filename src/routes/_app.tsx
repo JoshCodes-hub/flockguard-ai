@@ -59,7 +59,7 @@ function AppLayout() {
       {/* Sidebar */}
       <aside className={`${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:static inset-y-0 left-0 z-40 w-64 bg-sidebar text-sidebar-foreground border-r border-sidebar-border flex flex-col transition-transform`}>
         <div className="p-6 border-b border-sidebar-border flex items-center justify-between">
-          <Link to="/dashboard" className="font-extrabold tracking-tighter text-lg uppercase">PoultryGuard<span className="text-primary-soft">AI</span></Link>
+          <Link to="/dashboard" className="font-extrabold tracking-tighter text-lg uppercase">PoultryGuard</Link>
           <button onClick={() => setOpen(false)} className="md:hidden text-sidebar-foreground/60"><X className="size-5" /></button>
         </div>
         <nav className="flex-1 p-3 space-y-1">
@@ -86,7 +86,7 @@ function AppLayout() {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="md:hidden flex items-center justify-between p-4 border-b border-border bg-background sticky top-0 z-20">
           <button onClick={() => setOpen(true)}><Menu className="size-5" /></button>
-          <span className="font-extrabold tracking-tighter uppercase">PoultryGuard<span className="text-primary">AI</span></span>
+          <span className="font-extrabold tracking-tighter uppercase">PoultryGuard</span>
           <div className="w-5" />
         </header>
         <main className="flex-1 overflow-auto"><Outlet /></main>

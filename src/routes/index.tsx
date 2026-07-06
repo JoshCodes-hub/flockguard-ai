@@ -18,7 +18,7 @@ function Landing() {
     <div className="min-h-screen bg-background text-foreground font-display">
       <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-8">
-          <span className="font-extrabold tracking-tighter text-xl uppercase">PoultryGuard<span className="text-primary">AI</span></span>
+          <span className="font-extrabold tracking-tighter text-xl uppercase">PoultryGuard</span>
           <div className="hidden md:flex gap-6 text-sm font-medium text-foreground/60">
             <a href="#platform" className="hover:text-primary transition-colors">Platform</a>
             <a href="#features" className="hover:text-primary transition-colors">Intelligence</a>
@@ -116,7 +116,7 @@ function Landing() {
       <footer className="border-t border-border py-12 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
-            <p className="font-extrabold text-lg uppercase tracking-tighter mb-4">PoultryGuard<span className="text-primary">AI</span></p>
+            <p className="font-extrabold text-lg uppercase tracking-tighter mb-4">PoultryGuard</p>
             <p className="text-xs font-mono text-foreground/40">© 2026 POULTRYGUARD AI · SMART LIVESTOCK MONITORING</p>
           </div>
           <div className="flex gap-8 text-xs font-bold uppercase tracking-widest">
