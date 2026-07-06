@@ -71,7 +71,7 @@ function Auth() {
   return (
     <div className="min-h-screen grid md:grid-cols-2 bg-background">
       <div className="hidden md:flex flex-col justify-between bg-foreground text-background p-12">
-        <a href="/" className="font-extrabold tracking-tighter text-xl uppercase">PoultryGuard<span className="text-primary-soft">AI</span></a>
+        <a href="/" className="font-extrabold tracking-tighter text-xl uppercase">PoultryGuard</a>
         <div>
           <p className="font-mono text-[10px] text-primary-soft mb-6 tracking-widest">CLINICAL DECISION SUPPORT</p>
           <h1 className="font-serif italic text-5xl leading-tight mb-6">"Detect disease before it spreads through your flock."</h1>
