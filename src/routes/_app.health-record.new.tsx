@@ -17,7 +17,7 @@ import { z } from "zod";
 const SYMPTOMS = ["Coughing", "Sneezing", "Difficulty Breathing", "Twisted Neck", "Reduced Feeding", "Reduced Egg Production", "Swollen Head", "Nasal Discharge"];
 
 export const Route = createFileRoute("/_app/health-record/new")({
-  head: () => ({ meta: [{ title: "New Health Record — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "New Health Record — PoultryGuard" }] }),
   validateSearch: z.object({ farm: z.string().optional() }),
   component: NewRecord,
 });

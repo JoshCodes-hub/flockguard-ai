@@ -10,7 +10,7 @@ import { ArrowLeft, ShieldCheck, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/predictions/$id")({
-  head: () => ({ meta: [{ title: "Prediction — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "Prediction — PoultryGuard" }] }),
   component: PredictionPage,
 });
 

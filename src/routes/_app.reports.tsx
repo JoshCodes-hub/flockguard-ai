@@ -73,7 +73,7 @@ function ReportsPage() {
     // Header
     doc.setFontSize(20);
     doc.setTextColor(46, 125, 50);
-    doc.text("PoultryGuard AI", 14, 18);
+    doc.text("PoultryGuard", 14, 18);
     doc.setFontSize(10);
     doc.setTextColor(120);
     doc.text(`Generated ${now}`, 14, 24);

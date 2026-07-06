@@ -8,7 +8,7 @@ import { bulkVerifyPredictions } from "@/lib/predictions.functions";
 import { ShieldCheck, Stethoscope, AlertCircle, Filter } from "lucide-react";
 
 export const Route = createFileRoute("/_app/vet")({
-  head: () => ({ meta: [{ title: "Veterinarian Review — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "Veterinarian Review — PoultryGuard" }] }),
   component: VetPortal,
 });
 

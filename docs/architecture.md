@@ -1,4 +1,4 @@
-# PoultryGuard AI — System Architecture
+# PoultryGuard — System Architecture
 
 ## 1. High-Level Diagram
 

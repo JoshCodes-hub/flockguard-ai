@@ -1,6 +1,6 @@
-# Vercel Deployment Guide for FlockGuard AI
+# Vercel Deployment Guide for PoultryGuard
 
-This guide walks you through deploying your FlockGuard AI project (TanStack Start + Lovable Cloud / Supabase) on Vercel.
+This guide walks you through deploying your PoultryGuard project (TanStack Start + Lovable Cloud / Supabase) on Vercel.
 
 ---
 

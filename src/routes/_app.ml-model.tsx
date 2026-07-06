@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/ml-model")({
-  head: () => ({ meta: [{ title: "ML Model Lab — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "ML Model Lab — PoultryGuard" }] }),
   component: MlModelPage,
 });
 

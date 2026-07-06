@@ -14,7 +14,7 @@ const ChatInput = z.object({
     .max(20),
 });
 
-const SYSTEM_PROMPT = `You are PoultryGuard AI Farm Assistant — a veterinary and poultry husbandry advisor for small and commercial poultry farmers.
+const SYSTEM_PROMPT = `You are PoultryGuard Farm Assistant — a veterinary and poultry husbandry advisor for small and commercial poultry farmers.
 
 You specialize in:
 - Avian Influenza (H5N1, H5N8) detection, prevention and biosecurity

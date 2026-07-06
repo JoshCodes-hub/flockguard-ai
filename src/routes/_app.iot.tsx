@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Thermometer, Droplets, Wheat, Waves } from "lucide-react";
 
 export const Route = createFileRoute("/_app/iot")({
-  head: () => ({ meta: [{ title: "IoT Sensors — PoultryGuard AI" }] }),
+  head: () => ({ meta: [{ title: "IoT Sensors — PoultryGuard" }] }),
   component: IoT,
 });
 
@@ -19,7 +19,7 @@ function IoT() {
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-primary mb-2">FUTURE INTEGRATION</p>
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tighter">IoT Sensor Monitoring</h1>
-        <p className="text-sm text-foreground/60 mt-3 max-w-2xl">PoultryGuard AI is built to ingest live data from ESP32-based environmental sensors. Hardware integration is on the roadmap.</p>
+        <p className="text-sm text-foreground/60 mt-3 max-w-2xl">PoultryGuard is built to ingest live data from ESP32-based environmental sensors. Hardware integration is on the roadmap.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

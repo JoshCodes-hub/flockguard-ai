@@ -1,4 +1,4 @@
-# PoultryGuard AI — Defense Demo Script (≈5 minutes)
+# PoultryGuard — Defense Demo Script (≈5 minutes)
 
 ## Pre-demo checklist (do this 5 minutes before)
 
@@ -18,7 +18,7 @@
 
 > "Poultry farmers in Kenya lose entire flocks to Avian Influenza and Newcastle
 > Disease because diagnosis arrives too late. A veterinarian visit can take days.
-> PoultryGuard AI puts a clinical-grade diagnostic tool in every farmer's pocket
+> PoultryGuard puts a clinical-grade diagnostic tool in every farmer's pocket
 > and closes the loop with licensed vets who validate the AI."
 
 Scroll to show the **Workflow** section: Farmer → AI → Vet → Dataset.
