@@ -156,23 +156,15 @@ export const analyzeImage = createServerFn({ method: "POST" })
     const geminiKey = process.env.GEMINI_API_KEY;
     const apiKey = process.env.LOVABLE_API_KEY;
 
-    if (!geminiKey && !apiKey) throw new Error("AI service unavailable");
-
-    const systemPrompt = `You are a veterinary poultry diagnostic assistant. Examine the poultry image and assess visible signs of Avian Influenza or Newcastle Disease.
-
-You MUST respond with a single JSON object only (no markdown, no commentary) with this exact shape:
-{
-  "prediction": "Healthy" | "Newcastle Disease" | "Avian Influenza" | "Inconclusive",
-  "confidence": <integer 50-99>,
-  "risk_level": "Low" | "Medium" | "High",
-  "detected_symptoms": [<short strings>],
-  "recommendation": <one paragraph veterinary recommendation>,
-  "factors": [{"label": <short reason>, "weight": <0-1>, "direction": "newcastle"|"avian"|"healthy"|"stress"}]
-}`;
-
-    // Prepare to call either Gemini directly (preferred) or fallback to Lovable gateway
+    // We'll attempt Gemini first if GEMINI_API_KEY exists, otherwise fall back to Lovable.
+    // If neither is configured, we now proceed with a graceful fallback instead of throwing.
     let content = "{}";
-    if (geminiKey) {
+    let aiError: Error | null = null;
+
+    if (!geminiKey && !apiKey) {
+      aiError = new Error("AI service unavailable");
+      console.warn("[ai] no API keys configured — using fallback prediction");
+    } else if (geminiKey) {
       // Call Google Generative Language API using API key
       try {
         const gmBody = {
@@ -186,7 +178,6 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
               ],
             },
           ],
-          // optional: adjust temperature/verbosity
         };
 
         const gmUrl = `https://generativelanguage.googleapis.com/v1beta2/models/google/gemini-3-flash-preview:generateMessage?key=${encodeURIComponent(geminiKey)}`;
@@ -210,9 +201,8 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
           json?.message?.content?.[0]?.text ||
           JSON.stringify(json);
       } catch (err) {
-        // Surface the error so fallback or higher-level handler can act
-        console.error('[ai] Gemini call failed', err);
-        throw err;
+        aiError = err instanceof Error ? err : new Error(String(err));
+        console.error('[ai] Gemini call failed', aiError);
       }
     } else {
       // Lovable gateway fallback (original behavior)
@@ -248,8 +238,8 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
         const json = await resp.json();
         content = json?.choices?.[0]?.message?.content ?? "{}";
       } catch (err) {
-        console.error('[ai] Lovable gateway call failed', err);
-        throw err;
+        aiError = err instanceof Error ? err : new Error(String(err));
+        console.error('[ai] Lovable gateway call failed', aiError);
       }
     }
 
@@ -264,14 +254,29 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
     let parsed: AiResult = {};
     try { parsed = JSON.parse(content); } catch { parsed = {}; }
 
-    const prediction = String(parsed.prediction ?? "Inconclusive");
-    const confidence = Math.max(0, Math.min(99, Number(parsed.confidence ?? 60)));
+    // If AI failed or returned nothing useful, use a safe fallback so the app doesn't crash.
+    let prediction = String(parsed.prediction ?? "Inconclusive");
+    let confidence = Math.max(0, Math.min(99, Number(parsed.confidence ?? 60)));
     const rawRisk = String(parsed.risk_level ?? "Medium");
     const risk_level: "Low" | "Medium" | "High" =
       rawRisk === "High" || rawRisk === "Medium" || rawRisk === "Low" ? rawRisk : "Medium";
     const detected_symptoms: string[] = Array.isArray(parsed.detected_symptoms) ? parsed.detected_symptoms.slice(0, 12) : [];
-    const recommendation = String(parsed.recommendation ?? "Consult a veterinarian for confirmation.");
-    const factors = Array.isArray(parsed.factors) ? parsed.factors : [];
+    let recommendation = String(parsed.recommendation ?? "Consult a veterinarian for confirmation.");
+    let factors = Array.isArray(parsed.factors) ? parsed.factors : [];
+
+    let sourceForInsert: PredictionSource = "vision_ai";
+    if (aiError) {
+      // Conservative fallback when AI is unavailable or errored.
+      prediction = "Inconclusive";
+      confidence = 50;
+      // risk_level remains Medium
+      recommendation = "AI service unavailable — please try again later.";
+      factors = [];
+      sourceForInsert = "rule_engine";
+    } else {
+      // If the call succeeded and we were using Gemini, mark as vision_ai
+      sourceForInsert = geminiKey ? "vision_ai" : "vision_ai";
+    }
 
     const { data: imageRow, error: imgErr } = await supabase
       .from("uploaded_images")
@@ -296,7 +301,7 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
       confidence,
       risk_level,
       recommendation,
-      prediction_source: normalizePredictionSource(geminiKey ? "vision_ai" : "vision_ai"),
+      prediction_source: normalizePredictionSource(sourceForInsert),
       factors: JSON.parse(JSON.stringify(factors)),
     } as const;
 
