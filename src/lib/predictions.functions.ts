@@ -153,8 +153,10 @@ export const analyzeImage = createServerFn({ method: "POST" })
       .maybeSingle();
     if (!farm || farm.user_id !== userId) throw new Error("Farm not found");
 
+    const geminiKey = process.env.GEMINI_API_KEY;
     const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("AI service unavailable");
+
+    if (!geminiKey && !apiKey) throw new Error("AI service unavailable");
 
     const systemPrompt = `You are a veterinary poultry diagnostic assistant. Examine the poultry image and assess visible signs of Avian Influenza or Newcastle Disease.
 
@@ -168,36 +170,88 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
   "factors": [{"label": <short reason>, "weight": <0-1>, "direction": "newcastle"|"avian"|"healthy"|"stress"}]
 }`;
 
-    const body = {
-      model: "google/gemini-3-flash-preview",
-      messages: [
-        { role: "system", content: systemPrompt },
-        {
-          role: "user",
-          content: [
-            { type: "text", text: "Analyze this poultry image for Avian Influenza and Newcastle Disease symptoms. Return JSON only." },
-            { type: "image_url", image_url: { url: data.image_data_url } },
+    // Prepare to call either Gemini directly (preferred) or fallback to Lovable gateway
+    let content = "{}";
+    if (geminiKey) {
+      // Call Google Generative Language API using API key
+      try {
+        const gmBody = {
+          messages: [
+            { author: "system", content: [{ type: "text", text: systemPrompt }] },
+            {
+              author: "user",
+              content: [
+                { type: "text", text: "Analyze this poultry image for Avian Influenza and Newcastle Disease symptoms. Return JSON only." },
+                { type: "image", image: { uri: data.image_data_url } },
+              ],
+            },
           ],
-        },
-      ],
-      response_format: { type: "json_object" as const },
-    };
+          // optional: adjust temperature/verbosity
+        };
 
-    const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Lovable-API-Key": apiKey,
-      },
-      body: JSON.stringify(body),
-    });
+        const gmUrl = `https://generativelanguage.googleapis.com/v1beta2/models/google/gemini-3-flash-preview:generateMessage?key=${encodeURIComponent(geminiKey)}`;
+        const resp = await fetch(gmUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(gmBody),
+        });
 
-    if (resp.status === 429) throw new Error("AI rate limit reached — try again in a moment.");
-    if (resp.status === 402) throw new Error("AI credits exhausted. Add credits in workspace billing settings.");
-    if (!resp.ok) throw new Error(`AI request failed (${resp.status})`);
+        if (resp.status === 401) throw new Error("AI request failed (401)");
+        if (resp.status === 429) throw new Error("AI rate limit reached — try again in a moment.");
+        if (resp.status === 402) throw new Error("AI credits exhausted. Add credits in workspace billing settings.");
+        if (!resp.ok) throw new Error(`AI request failed (${resp.status})`);
 
-    const json = await resp.json();
-    const content: string = json?.choices?.[0]?.message?.content ?? "{}";
+        const json = await resp.json();
+        // Try common response paths to extract text content
+        content =
+          json?.candidates?.[0]?.message?.content?.[0]?.text ||
+          json?.output?.[0]?.content?.[0]?.text ||
+          json?.candidates?.[0]?.content?.[0]?.text ||
+          json?.message?.content?.[0]?.text ||
+          JSON.stringify(json);
+      } catch (err) {
+        // Surface the error so fallback or higher-level handler can act
+        console.error('[ai] Gemini call failed', err);
+        throw err;
+      }
+    } else {
+      // Lovable gateway fallback (original behavior)
+      try {
+        const body = {
+          model: "google/gemini-3-flash-preview",
+          messages: [
+            { role: "system", content: systemPrompt },
+            {
+              role: "user",
+              content: [
+                { type: "text", text: "Analyze this poultry image for Avian Influenza and Newcastle Disease symptoms. Return JSON only." },
+                { type: "image_url", image_url: { url: data.image_data_url } },
+              ],
+            },
+          ],
+          response_format: { type: "json_object" as const },
+        };
+
+        const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Lovable-API-Key": apiKey,
+          },
+          body: JSON.stringify(body),
+        });
+
+        if (resp.status === 429) throw new Error("AI rate limit reached — try again in a moment.");
+        if (resp.status === 402) throw new Error("AI credits exhausted. Add credits in workspace billing settings.");
+        if (!resp.ok) throw new Error(`AI request failed (${resp.status})`);
+
+        const json = await resp.json();
+        content = json?.choices?.[0]?.message?.content ?? "{}";
+      } catch (err) {
+        console.error('[ai] Lovable gateway call failed', err);
+        throw err;
+      }
+    }
 
     type AiResult = {
       prediction?: string;
@@ -242,7 +296,7 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
       confidence,
       risk_level,
       recommendation,
-      prediction_source: normalizePredictionSource("vision_ai"),
+      prediction_source: normalizePredictionSource(geminiKey ? "vision_ai" : "vision_ai"),
       factors: JSON.parse(JSON.stringify(factors)),
     } as const;
 
