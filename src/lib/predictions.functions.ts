@@ -3,6 +3,20 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { runClinicalEngine, type HealthInput, type ActivityLevel, type IntakeLevel } from "./disease-engine";
 import { z } from "zod";
 
+// Allowed DB values for prediction_source. Keep in sync with DB constraint/migrations.
+const ALLOWED_PREDICTION_SOURCES = ["rule_engine", "vision_ai", "ml_model"] as const;
+type PredictionSource = (typeof ALLOWED_PREDICTION_SOURCES)[number];
+
+function normalizePredictionSource(raw?: string | null): PredictionSource {
+  if (!raw) return "rule_engine";
+  const r = String(raw).toLowerCase();
+  if (r === "vision_ai" || r === "vision" || r === "ai" || r === "lovable") return "vision_ai";
+  if (r === "ml_model" || r === "ml" || r === "mlmodel") return "ml_model";
+  if (r === "rule_engine" || r === "rule") return "rule_engine";
+  // conservative default
+  return "rule_engine";
+}
+
 const HealthRecordInput = z.object({
   farm_id: z.string().uuid(),
   temperature: z.number().nullable().optional(),
@@ -94,22 +108,27 @@ export const submitHealthRecord = createServerFn({ method: "POST" })
       }
     }
 
+    const payload = {
+      farm_id: data.farm_id,
+      user_id: userId,
+      record_id: record.id,
+      prediction: result.prediction,
+      confidence: result.confidence,
+      risk_level: result.risk,
+      recommendation: result.recommendation,
+      prediction_source: normalizePredictionSource(predictionSource),
+      factors: JSON.parse(JSON.stringify(result.factors)),
+    } as const;
+
     const { data: pred, error: predErr } = await supabase
       .from("predictions")
-      .insert({
-        farm_id: data.farm_id,
-        user_id: userId,
-        record_id: record.id,
-        prediction: result.prediction,
-        confidence: result.confidence,
-        risk_level: result.risk,
-        recommendation: result.recommendation,
-        prediction_source: predictionSource,
-        factors: JSON.parse(JSON.stringify(result.factors)),
-      })
+      .insert(payload)
       .select()
       .single();
-    if (predErr || !pred) throw new Error(predErr?.message ?? "Failed to save prediction");
+    if (predErr || !pred) {
+      console.error("[predictions] insert failed", { payload, error: predErr });
+      throw new Error(predErr?.message ?? "Failed to save prediction");
+    }
 
     return { prediction_id: pred.id, source: predictionSource, ...result };
   });
@@ -215,22 +234,27 @@ You MUST respond with a single JSON object only (no markdown, no commentary) wit
       .single();
     if (imgErr || !imageRow) throw new Error(imgErr?.message ?? "Failed to save image");
 
+    const payload = {
+      farm_id: data.farm_id,
+      user_id: userId,
+      image_id: imageRow.id,
+      prediction,
+      confidence,
+      risk_level,
+      recommendation,
+      prediction_source: normalizePredictionSource("vision_ai"),
+      factors: JSON.parse(JSON.stringify(factors)),
+    } as const;
+
     const { data: pred, error: predErr } = await supabase
       .from("predictions")
-      .insert({
-        farm_id: data.farm_id,
-        user_id: userId,
-        image_id: imageRow.id,
-        prediction,
-        confidence,
-        risk_level,
-        recommendation,
-        prediction_source: "vision_ai",
-        factors: JSON.parse(JSON.stringify(factors)),
-      })
+      .insert(payload)
       .select()
       .single();
-    if (predErr || !pred) throw new Error(predErr?.message ?? "Failed to save prediction");
+    if (predErr || !pred) {
+      console.error("[predictions] insert failed", { payload, error: predErr });
+      throw new Error(predErr?.message ?? "Failed to save prediction");
+    }
 
     return {
       prediction_id: pred.id,
@@ -294,4 +318,3 @@ export const bulkVerifyPredictions = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true, count: count ?? data.prediction_ids.length };
   });
-
